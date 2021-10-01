@@ -1,32 +1,42 @@
-import pool from '../lib/utils/pool.js';
-import setup from '../data/setup.js';
-import request from 'supertest';
-import app from '../lib/app.js';
+const pool = require('../lib/utils/pool.js');
+//const twilio = require('../lib/utils/twilio.js');
+const setup = require('../data/setup.js');
+const request = require('supertest');
+const app = require('../lib/app.js');
+
+// jest.mock('twilio', () => () => ({
+//     messages: {
+//         create: jest.fn(),
+//     },
+// }));
 
 describe('routes', () => {
+
     beforeEach(() => {
         return setup(pool);
     });
-  
-    it('POSTS a new material', async () => {
-        const currentDate = new Date().toISOString().slice(0, 10);
+
+    it('POSTS a new item', () => {
+        //console.log('runnning....');
+        //const currentDate = new Date().toISOString().slice(0, 10);
         const material = {
-            date: currentDate, 
+            //date: currentDate, 
             material: 'linen',
             piece: 'pants',
             color: 'cream',
             have: true
         };
 
-        const res = await request(app)
-            .post('api/v1/clothing-inventory')
-            .send(material);
-        console.log(res);
-        expect(res.body).toEqual({
-            id: '1',
-            date: '09-27-2021',
-            ...material,
-        });
+        return request(app)
+            .post('/api/v1/clothing-inventory')
+            .send(material)
+            .then((res) => {
+                expect(res.body).toEqual({
+                    id: '1',
+                    //date: '09-27-2021',
+                    ...material,
+                });
+            });
     });
 });
 
