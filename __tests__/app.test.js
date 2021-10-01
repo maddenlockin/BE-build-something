@@ -15,27 +15,33 @@ describe('routes', () => {
     beforeEach(() => {
         return setup(pool);
     });
+    const material = {
+        //date: currentDate, 
+        material: 'linen',
+        piece: 'pants',
+        color: 'cream',
+        have: true
+    };
 
     it('POSTS a new item', () => {
-        //console.log('runnning....');
-        //const currentDate = new Date().toISOString().slice(0, 10);
-        const material = {
-            //date: currentDate, 
-            material: 'linen',
-            piece: 'pants',
-            color: 'cream',
-            have: true
-        };
-
+        
         return request(app)
             .post('/api/v1/clothing-inventory')
             .send(material)
             .then((res) => {
                 expect(res.body).toEqual({
                     id: '1',
-                    //date: '09-27-2021',
                     ...material,
                 });
+            });
+    });
+
+    it('gets an item by id', async () => {
+        const item = await Item.insert(material);
+        return request(app)
+            .get('/api/v1/clothing-inventory')
+            .then((res) => {
+                expect(res.body).toEqual(item);
             });
     });
 });
