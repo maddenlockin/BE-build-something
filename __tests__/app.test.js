@@ -46,6 +46,15 @@ describe('routes', () => {
                 expect(res.body).toEqual(item);
             });
     });
+
+    it('gets all items in the database', async () => {
+        const item = await Material.create(material);
+        return request(app)
+            .get('/api/v1/orders')
+            .then((res) => {
+                expect(res.body).toEqual([item]);
+            });
+    });
 });
 
 
