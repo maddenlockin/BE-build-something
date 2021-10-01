@@ -1,22 +1,23 @@
 const pool = require('../lib/utils/pool.js');
-//const twilio = require('../lib/utils/twilio.js');
+//const twilio = require('twilio');
 const setup = require('../data/setup.js');
 const request = require('supertest');
 const app = require('../lib/app.js');
+const Material = require('../lib/models/Material.js');
 
-// jest.mock('twilio', () => () => ({
-//     messages: {
-//         create: jest.fn(),
-//     },
-// }));
+jest.mock('twilio', () => () => ({
+    messages: {
+        create: jest.fn(),
+    },
+}));
 
 describe('routes', () => {
 
     beforeEach(() => {
         return setup(pool);
     });
-    const material = {
-        //date: currentDate, 
+
+    const material = { 
         material: 'linen',
         piece: 'pants',
         color: 'cream',
@@ -37,10 +38,11 @@ describe('routes', () => {
     });
 
     it('gets an item by id', async () => {
-        const item = await Item.insert(material);
+        const item = await Material.create(material);
         return request(app)
-            .get('/api/v1/clothing-inventory')
+            .get('/api/v1/clothing-inventory/1')
             .then((res) => {
+                console.log(res.body);
                 expect(res.body).toEqual(item);
             });
     });
