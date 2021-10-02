@@ -4,6 +4,7 @@ const setup = require('../data/setup.js');
 const request = require('supertest');
 const app = require('../lib/app.js');
 const Material = require('../lib/models/Material.js');
+const MaterialService = require('../lib/services/MaterialService.js');
 
 jest.mock('twilio', () => () => ({
     messages: {
@@ -57,16 +58,19 @@ describe('routes', () => {
     });
 
     it('updates an item in the database by its id', async () => {
+        const entry = await Material.create(material);
+        const updateEntry = {
+            id: entry.id,
+            material: 'cotton',
+            piece: entry.piece,
+            color: entry.color,
+            have: entry.have
+        };
         return request(app)
-            .patch('/api/v1/clothing-inventory/1')
-            .send({ material: 'cotton' })
+            .patch(`/api/v1/clothing-inventory/${entry.id}`)
+            .send(updateEntry)
             .then((res) => {
-                expect(res.body).toEqual({
-                    material: 'cotton',
-                    piece: 'pants',
-                    color: 'cream',
-                    have: true
-                });
+                expect(res.body).toEqual(updateEntry);
             });
     });
 
