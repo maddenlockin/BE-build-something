@@ -42,7 +42,6 @@ describe('routes', () => {
         return request(app)
             .get('/api/v1/clothing-inventory/1')
             .then((res) => {
-                console.log(res.body);
                 expect(res.body).toEqual(item);
             });
     });
@@ -50,11 +49,28 @@ describe('routes', () => {
     it('gets all items in the database', async () => {
         const item = await Material.create(material);
         return request(app)
-            .get('/api/v1/orders')
+            .get('/api/v1/clothing-inventory')
             .then((res) => {
+                //console.log(res.body);
                 expect(res.body).toEqual([item]);
             });
     });
+
+    it('updates an item in the database by its id', async () => {
+        return request(app)
+            .patch('/api/v1/clothing-inventory/1')
+            .send({ material: 'cotton' })
+            .then((res) => {
+                expect(res.body).toEqual({
+                    material: 'cotton',
+                    piece: 'pants',
+                    color: 'cream',
+                    have: true
+                });
+            });
+    });
+
+
 });
 
 
