@@ -40,6 +40,7 @@ describe('routes', () => {
 
     it('gets an item by id', async () => {
         const item = await Material.create(material);
+
         return request(app)
             .get('/api/v1/clothing-inventory/1')
             .then((res) => {
@@ -49,6 +50,7 @@ describe('routes', () => {
 
     it('gets all items in the database', async () => {
         const item = await Material.create(material);
+
         return request(app)
             .get('/api/v1/clothing-inventory')
             .then((res) => {
@@ -71,6 +73,15 @@ describe('routes', () => {
             .send(updateEntry)
             .then((res) => {
                 expect(res.body).toEqual(updateEntry);
+            });
+    });
+
+    it('deletes an item from db by id', async () => {
+        const item = await Material.create(material);
+
+        return request(app)
+            .delete(`/api/v1/clothing-inventory/${item.id}`)
+            .then((res) => {expect(res.body).toEqual({});
             });
     });
 
